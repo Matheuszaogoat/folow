@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Follow-up de Obras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EDE8DC;
+    --panel: #F8F5EE;
+    --panel-raised: #FFFFFF;
+    --ink: #211F1B;
+    --ink-soft: #635D50;
+    --ink-faint: #918B7B;
+    --line: #D9D1BC;
+    --line-strong: #C6BB9E;
+    --amber: #B9701C;
+    --amber-soft: #F1DFC2;
+    --blue: #2E4A5E;
+    --blue-soft: #DCE5E9;
+    --green: #3F6B45;
+    --green-soft: #DEE8DD;
+    --red: #A03A2C;
+    --red-soft: #F1DBD5;
+    --radius-s: 3px;
+    --radius-m: 6px;
+    --font-display: 'Archivo', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B1915;
+      --panel: #232019;
+      --panel-raised: #2A261D;
+      --ink: #EDE7D8;
+      --ink-soft: #B8AF9A;
+      --ink-faint: #837A64;
+      --line: #3A3527;
+      --line-strong: #4A4430;
+      --amber: #D98C2E;
+      --amber-soft: #3B2E17;
+      --blue: #7FA2B8;
+      --blue-soft: #22303A;
+      --green: #7FAD84;
+      --green-soft: #223424;
+      --red: #D3796A;
+      --red-soft: #3A211D;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1915;
+    --panel: #232019;
+    --panel-raised: #2A261D;
+    --ink: #EDE7D8;
+    --ink-soft: #B8AF9A;
+    --ink-faint: #837A64;
+    --line: #3A3527;
+    --line-strong: #4A4430;
+    --amber: #D98C2E;
+    --amber-soft: #3B2E17;
+    --blue: #7FA2B8;
+    --blue-soft: #22303A;
+    --green: #7FAD84;
+    --green-soft: #223424;
+    --red: #D3796A;
+    --red-soft: #3A211D;
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--amber-soft); }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  .app {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 236px 1fr 280px;
+    grid-template-rows: 56px 1fr;
+    grid-template-areas:
+      "brand topbar topbar"
+      "rail stage search";
+  }
+  .brand {
+    grid-area: brand;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  .brand-mark {
+    width: 20px; height: 20px;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .brand-mark::after {
+    content: "";
+    position: absolute; inset: 3px;
+    border: 1px solid var(--ink);
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.01em;
+  }
+  .topbar {
+    grid-area: topbar;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--line);
+    gap: 12px;
+  }
+  .topbar-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .topbar-sub {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    margin-left: 10px;
+  }
+  .btn-drawer {
+    display: none;
+    background: none;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  .rail {
+    grid-area: rail;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 16px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .rail-section { padding: 0 14px; }
+  .nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; text-align: left;
+    background: none; border: none;
+    padding: 8px 10px;
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .nav-item:hover { background: var(--panel); color: var(--ink); }
+  .nav-item.active { background: var(--ink); color: var(--paper); }
+  .nav-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.85; }
+
+  .chip-row { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+  .chip {
+    display: flex; align-items: center; justify-content: space-between;
+    background: none; border: none;
+    padding: 6px 10px 6px 24px;
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: left;
+  }
+  .chip:hover { background: var(--panel); }
+  .chip.active { color: var(--ink); font-weight: 600; }
+  .chip.active::before { content: "—"; margin-right: 6px; margin-left: -14px; color: var(--amber); }
+  .chip-count { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
+
+  .btn-new {
+    margin: 4px 14px 0;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: var(--radius-s);
+    padding: 9px 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .btn-new:hover { background: var(--amber); color: #fff; }
+
+  .rail-list { list-style: none; margin: 0; padding: 0 8px; display: flex; flex-direction: column; gap: 6px; }
+  .obra-card {
+    width: 100%; text-align: left;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 9px 10px;
+    cursor: pointer;
+  }
+  .obra-card:hover { border-left-color: var(--amber); }
+  .obra-card.active { border-left-color: var(--amber); background: var(--amber-soft); }
+  .obra-card.status-concluida { border-left-color: var(--green); }
+  .obra-card-name { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; }
+  .obra-card-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+  .rail-empty { padding: 14px; font-size: 12.5px; color: var(--ink-faint); }
+
+  .stage {
+    grid-area: stage;
+    overflow-y: auto;
+    padding: 26px 32px 60px;
+  }
+  .stage-inner { max-width: 720px; }
+
+  .placeholder {
+    max-width: 480px;
+    margin-top: 40px;
+  }
+  .placeholder h2 { font-family: var(--font-display); font-size: 19px; margin: 0 0 8px; }
+  .placeholder p { color: var(--ink-soft); margin: 0 0 4px; }
+  .stat-row { display: flex; gap: 26px; margin-top: 22px; }
+  .stat { font-family: var(--font-mono); }
+  .stat b { display: block; font-size: 26px; font-family: var(--font-display); font-weight: 700; }
+  .stat span { font-size: 12px; color: var(--ink-soft); }
+
+  .obra-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .obra-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+  .obra-sub { color: var(--ink-soft); font-size: 13px; }
+  .stamp {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .stamp-andamento { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+  .stamp-concluida { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+
+  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .tab-btn {
+    background: none; border: none;
+    padding: 9px 4px; margin-right: 22px;
+    font-family: var(--font-display); font-weight: 600; font-size: 13.5px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--ink); border-bottom-color: var(--amber); }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 12px; color: var(--ink-soft); font-weight: 500; }
+  .field input, .field select, .field textarea {
+    background: var(--panel-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 8px 10px;
+    color: var(--ink);
+  }
+  .field input:disabled, .field select:disabled { color: var(--ink-soft); background: var(--panel); }
+  .field textarea { resize: vertical; min-height: 60px; font-family: var(--font-body); }
+  .field input[type="date"], .field input[type="time"] { font-family: var(--font-mono); }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
+  .btn-primary {
+    background: var(--ink); color: var(--paper); border: none;
+    padding: 9px 16px; border-radius: var(--radius-s);
+    font-family: var(--font-display); font-weight: 600; font-size: 13.5px; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--amber); color: #fff; }
+  .btn-ghost {
+    background: none; border: 1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 8px 14px; border-radius: var(--radius-s);
+    font-family: var(--font-body); font-size: 13px; cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-danger { color: var(--red); }
+  .btn-danger:hover { border-color: var(--red); }
+  .save-note { font-size: 12px; color: var(--ink-faint); font-family: var(--font-mono); }
+
+  .servico-form {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 16px;
+    margin-bottom: 22px;
+  }
+  .servico-form h3 { font-family: var(--font-display); font-size: 13.5px; margin: 0 0 12px; text-transform: none; }
+
+  .servico-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .servico-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 14px;
+    align-items: start;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .servico-when { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .servico-desc { font-size: 13.5px; }
+  .servico-who { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--blue); font-weight: 600; }
+  .servico-item .btn-icon { }
+  .btn-icon {
+    background: none; border: none; color: var(--ink-faint); cursor: pointer; padding: 4px;
+    font-size: 12px; font-family: var(--font-mono);
+  }
+  .btn-icon:hover { color: var(--red); }
+  .empty-state { padding: 30px 0; color: var(--ink-faint); font-size: 13px; }
+
+  .func-list { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .func-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-s);
+    padding: 11px 14px;
+  }
+  .func-item.inativo { opacity: 0.55; }
+  .func-name { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; }
+  .func-role { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+  .func-actions { display: flex; gap: 6px; align-items: center; }
+
+  .search-col {
+    grid-area: search;
+    border-left: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 20px 18px 40px;
+  }
+  .search-title { font-family: var(--font-display); font-weight: 700; font-size: 13px; margin: 0 0 14px; }
+  .search-field { margin-bottom: 14px; }
+  .search-field label { display: block; font-size: 11.5px; color: var(--ink-soft); margin-bottom: 5px; font-weight: 500; }
+  .search-field input, .search-field select {
+    width: 100%;
+    background: var(--panel-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 8px 9px;
+  }
+  .search-divider { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
+  .results-count { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 8px; }
+  .result-item {
+    width: 100%; text-align: left; background: none; border: none;
+    padding: 9px 0; border-bottom: 1px solid var(--line); cursor: pointer;
+  }
+  .result-name { font-family: var(--font-display); font-weight: 600; font-size: 13px; }
+  .result-meta { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+  .result-meta .stamp { padding: 2px 6px; font-size: 9.5px; margin-left: 6px; vertical-align: middle; }
+
+  .banner {
+    font-size: 12px; color: var(--ink-soft);
+    background: var(--panel);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-s);
+    padding: 9px 12px;
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 1040px) {
+    .app { grid-template-columns: 210px 1fr; grid-template-areas: "brand topbar" "rail stage"; }
+    .search-col {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 88vw);
+      background: var(--paper); z-index: 30; transform: translateX(100%);
+      transition: transform 0.18s ease; box-shadow: -8px 0 24px rgba(0,0,0,0.18);
+      padding-top: calc(20px + env(safe-area-inset-top, 0px));
+    }
+    .search-col.open { transform: translateX(0); }
+    .btn-drawer { display: inline-flex; align-items: center; gap: 6px; }
+  }
+  @media (max-width: 680px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: 52px auto 1fr; grid-template-areas: "topbar" "rail" "stage"; }
+    .brand { display: none; }
+    .rail { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--line); padding: 10px 8px; gap: 10px; align-items: center; }
+    .rail-section { padding: 0 6px; flex-shrink: 0; }
+    .chip-row { flex-direction: row; }
+    .rail-list { flex-direction: row; padding: 0; }
+    .obra-card { min-width: 190px; }
+    .btn-new { margin: 0 6px; }
+    .field-grid { grid-template-columns: 1fr; }
+    .servico-item { grid-template-columns: 1fr; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"></div>
+    <div class="brand-name">FOLLOW-UP DE OBRAS</div>
+  </div>
+
+  <div class="topbar">
+    <div>
+      <span class="topbar-title" id="topbarTitle">Obras</span>
+      <span class="topbar-sub" id="topbarSub"></span>
+    </div>
+    <button class="btn-drawer" id="btnDrawer" type="button" aria-label="Abrir pesquisa">Pesquisar</button>
+  </div>
+
+  <aside class="rail" id="rail">
+    <div class="rail-section">
+      <ul class="nav-list">
+        <li><button class="nav-item" data-nav="funcionarios" id="navFuncionarios">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.2" r="2.6"/><path d="M2.5 14c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
+          Funcionários
+        </button></li>
+        <li><button class="nav-item active" data-nav="obras" id="navObras">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 14V6.5L8 2l6 4.5V14H2z"/><path d="M6 14V9h4v5"/></svg>
+          Obras
+        </button></li>
+      </ul>
+    </div>
+
+    <div class="rail-section" id="statusFilterSection">
+      <div class="chip-row">
+        <button class="chip active" data-status="andamento">Em andamento <span class="chip-count" id="countAndamento">0</span></button>
+        <button class="chip" data-status="concluida">Concluídas <span class="chip-count" id="countConcluida">0</span></button>
+        <button class="chip" data-status="todas">Todas <span class="chip-count" id="countTodas">0</span></button>
+      </div>
+    </div>
+
+    <button class="btn-new" id="btnNovaObra" type="button">+ Nova obra</button>
+
+    <ul class="rail-list" id="railList"></ul>
+  </aside>
+
+  <main class="stage">
+    <div class="stage-inner" id="stage"></div>
+  </main>
+
+  <aside class="search-col" id="searchCol">
+    <div class="search-title">Pesquisar obras</div>
+    <div class="search-field">
+      <label for="qNome">Nome, cliente ou local</label>
+      <input type="text" id="qNome" placeholder="ex.: Restaurante Alvorada">
+    </div>
+    <div class="search-field">
+      <label for="qFuncionario">Funcionário que participou</label>
+      <select id="qFuncionario"><option value="">Todos</option></select>
+    </div>
+    <div class="search-field">
+      <label for="qOrdenar">Ordenar por</label>
+      <select id="qOrdenar">
+        <option value="modificado">Modificado recentemente</option>
+        <option value="nome">Nome (A–Z)</option>
+        <option value="termino">Previsão de término</option>
+      </select>
+    </div>
+    <hr class="search-divider">
+    <div class="results-count" id="resultsCount"></div>
+    <div id="resultsList"></div>
+  </aside>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- data layer ----------
+  var Store = {
+    obras: [], servicos: [], funcionarios: [],
+    db: null, ready: false, onChange: function () {},
+    async init(onChange) {
+      this.onChange = onChange;
+      try { this.db = (window.claude && window.claude.use) ? await window.claude.use("db") : null; }
+      catch (e) { this.db = null; }
+      if (this.db) {
+        this._sub("obras");
+        this._sub("servicos");
+        this._sub("funcionarios");
+      }
+      this.ready = true;
+      this.onChange();
+    },
+    _sub(name) {
+      var self = this;
+      try {
+        this.db.collection(name).onSnapshot(function (snap) {
+          self[name] = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+          self.onChange();
+        }, function (err) { console.error("db error", name, err); });
+      } catch (e) { console.error(e); }
+    },
+    _localId(prefix) { return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); },
+
+    async addObra(data) {
+      if (this.db) { await this.db.collection("obras").add(data); }
+      else { data = Object.assign({ id: this._localId("o") }, data); this.obras.push(data); this.onChange(); }
+    },
+    async updateObra(id, data) {
+      if (this.db) { await this.db.doc("obras/" + id).update(data); }
+      else {
+        var o = this.obras.find(function (x) { return x.id === id; });
+        if (o) Object.assign(o, data);
+        this.onChange();
+      }
+    },
+    async deleteObra(id) {
+      if (this.db) {
+        await this.db.doc("obras/" + id).delete();
+        var self = this;
+        this.servicos.filter(function (s) { return s.obraId === id; }).forEach(function (s) {
+          self.db.doc("servicos/" + s.id).delete().catch(function () {});
+        });
+      } else {
+        this.obras = this.obras.filter(function (x) { return x.id !== id; });
+        this.servicos = this.servicos.filter(function (x) { return x.obraId !== id; });
+        this.onChange();
+      }
+    },
+    async addServico(data) {
+      if (this.db) { await this.db.collection("servicos").add(data); }
+      else { data = Object.assign({ id: this._localId("s") }, data); this.servicos.push(data); this.onChange(); }
+    },
+    async deleteServico(id) {
+      if (this.db) { await this.db.doc("servicos/" + id).delete(); }
+      else { this.servicos = this.servicos.filter(function (x) { return x.id !== id; }); this.onChange(); }
+    },
+    async addFuncionario(data) {
+      if (this.db) { await this.db.collection("funcionarios").add(data); }
+      else { data = Object.assign({ id: this._localId("f") }, data); this.funcionarios.push(data); this.onChange(); }
+    },
+    async updateFuncionario(id, data) {
+      if (this.db) { await this.db.doc("funcionarios/" + id).update(data); }
+      else {
+        var f = this.funcionarios.find(function (x) { return x.id === id; });
+        if (f) Object.assign(f, data);
+        this.onChange();
+      }
+    },
+    async deleteFuncionario(id) {
+      if (this.db) { await this.db.doc("funcionarios/" + id).delete(); }
+      else { this.funcionarios = this.funcionarios.filter(function (x) { return x.id !== id; }); this.onChange(); }
+    }
+  };
+
+  // ---------- ui state ----------
+  var ui = {
+    nav: "obras",
+    statusFilter: "andamento",
+    currentObraId: null,
+    tab: "info",
+    editing: false,
+    q: "",
+    qFuncionario: "",
+    qOrdenar: "modificado"
+  };
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function fmtDate(iso) {
+    if (!iso) return "—";
+    var p = iso.split("-");
+    if (p.length !== 3) return iso;
+    return p[2] + "/" + p[1] + "/" + p[0];
+  }
+  function fmtDateTime(ts) {
+    if (!ts) return "—";
+    var d = new Date(ts);
+    return fmtDate(d.toISOString().slice(0, 10)) + " " + d.toTimeString().slice(0, 5);
+  }
+  function nowIso() { return new Date().toISOString().slice(0, 10); }
+
+  function funcNome(id) {
+    var f = Store.funcionarios.find(function (x) { return x.id === id; });
+    return f ? f.nome : "(funcionário removido)";
+  }
+
+  // ---------- render: rail ----------
+  function renderRail() {
+    var isObras = ui.nav === "obras";
+    document.getElementById("navObras").classList.toggle("active", isObras);
+    document.getElementById("navFuncionarios").classList.toggle("active", !isObras);
+    document.getElementById("statusFilterSection").style.display = isObras ? "" : "none";
+    document.getElementById("btnNovaObra").style.display = isObras ? "" : "none";
+    document.getElementById("btnNovaObra").textContent = isObras ? "+ Nova obra" : "+ Novo funcionário";
+    if (!isObras) {
+      document.getElementById("railList").innerHTML = "";
+      return;
+    }
+
+    var counts = { andamento: 0, concluida: 0, todas: Store.obras.length };
+    Store.obras.forEach(function (o) { if (o.status === "concluida") counts.concluida++; else counts.andamento++; });
+    document.getElementById("countAndamento").textContent = counts.andamento;
+    document.getElementById("countConcluida").textContent = counts.concluida;
+    document.getElementById("countTodas").textContent = counts.todas;
+    document.querySelectorAll(".chip").forEach(function (c) {
+      c.classList.toggle("active", c.dataset.status === ui.statusFilter);
+    });
+
+    var list = Store.obras.filter(function (o) {
+      if (ui.statusFilter === "todas") return true;
+      return (o.status || "andamento") === ui.statusFilter;
+    }).sort(function (a, b) { return (b.modificadoEm || 0) - (a.modificadoEm || 0); });
+
+    var html = "";
+    if (list.length === 0) {
+      html = '<li class="rail-empty">Nenhuma obra aqui ainda.</li>';
+    } else {
+      list.forEach(function (o) {
+        html += '<li><button class="obra-card status-' + esc(o.status || "andamento") + (o.id === ui.currentObraId ? " active" : "") + '" data-obra="' + o.id + '">' +
+          '<div class="obra-card-name">' + esc(o.nome || "Sem nome") + "</div>" +
+          '<div class="obra-card-meta">' + esc(o.cliente || "—") + " · previsão " + fmtDate(o.previsaoTermino) + "</div>" +
+          "</button></li>";
+      });
+    }
+    document.getElementById("railList").innerHTML = html;
+  }
+
+  // ---------- render: stage ----------
+  function renderStage() {
+    var stage = document.getElementById("stage");
+    var topTitle = document.getElementById("topbarTitle");
+    var topSub = document.getElementById("topbarSub");
+
+    if (ui.nav === "funcionarios") {
+      topTitle.textContent = "Funcionários";
+      topSub.textContent = Store.funcionarios.length + " cadastrado(s)";
+      stage.innerHTML = renderFuncionariosView();
+      bindFuncionariosView();
+      return;
+    }
+
+    var obra = Store.obras.find(function (o) { return o.id === ui.currentObraId; });
+    if (!obra) {
+      topTitle.textContent = "Obras";
+      topSub.textContent = "";
+      stage.innerHTML = renderOverview();
+      return;
+    }
+
+    topTitle.textContent = obra.nome || "Obra sem nome";
+    topSub.textContent = obra.status === "concluida" ? "Concluída" : "Em andamento";
+    stage.innerHTML = renderObraDetail(obra);
+    bindObraDetail(obra);
+  }
+
+  function renderOverview() {
+    var andamento = Store.obras.filter(function (o) { return (o.status || "andamento") !== "concluida"; }).length;
+    var concluidas = Store.obras.filter(function (o) { return o.status === "concluida"; }).length;
+    var note = Store.db ? "" : '<div class="banner">Este preview está rodando sem armazenamento persistente — as alterações não serão salvas ao recarregar a página.</div>';
+    return note +
+      '<div class="placeholder">' +
+      "<h2>Nenhuma obra selecionada</h2>" +
+      "<p>Escolha uma obra na coluna à esquerda, use a pesquisa à direita, ou cadastre uma nova obra.</p>" +
+      '<div class="stat-row">' +
+      '<div class="stat"><b>' + andamento + "</b><span>em andamento</span></div>" +
+      '<div class="stat"><b>' + concluidas + "</b><span>concluídas</span></div>" +
+      '<div class="stat"><b>' + Store.funcionarios.filter(function (f) { return f.status !== "inativo"; }).length + "</b><span>funcionários ativos</span></div>" +
+      "</div></div>";
+  }
+
+  function renderObraDetail(obra) {
+    var stamp = obra.status === "concluida"
+      ? '<span class="stamp stamp-concluida">Concluída</span>'
+      : '<span class="stamp stamp-andamento">Em andamento</span>';
+
+    var head = '<div class="obra-head">' +
+      "<div><h1 class=\"obra-title\">" + esc(obra.nome || "Obra sem nome") + "</h1>" +
+      '<div class="obra-sub">' + esc(obra.cliente || "Cliente não informado") + " — " + esc(obra.local || "local não informado") + "</div></div>" +
+      stamp + "</div>";
+
+    var tabs = '<div class="tabs">' +
+      '<button class="tab-btn' + (ui.tab === "info" ? " active" : "") + '" data-tab="info">Informações</button>' +
+      '<button class="tab-btn' + (ui.tab === "servicos" ? " active" : "") + '" data-tab="servicos">Serviços (' + Store.servicos.filter(function (s) { return s.obraId === obra.id; }).length + ")</button>" +
+      "</div>";
+
+    var body = ui.tab === "info" ? renderInfoTab(obra) : renderServicosTab(obra);
+    return head + tabs + body;
+  }
+
+  function renderInfoTab(obra) {
+    return '<div class="field-grid">' +
+      '<div class="field"><label>Nome da obra</label><input type="text" id="fNome" value="' + esc(obra.nome || "") + '"></div>' +
+      '<div class="field"><label>Cliente</label><input type="text" id="fCliente" value="' + esc(obra.cliente || "") + '"></div>' +
+      '<div class="field full"><label>Local</label><input type="text" id="fLocal" value="' + esc(obra.local || "") + '"></div>' +
+      '<div class="field"><label>Data de início</label><input type="date" id="fInicio" value="' + esc(obra.dataInicio || "") + '"></div>' +
+      '<div class="field"><label>Previsão de término</label><input type="date" id="fTermino" value="' + esc(obra.previsaoTermino || "") + '"></div>' +
+      '<div class="field"><label>Status</label><select id="fStatus">' +
+      '<option value="andamento"' + (obra.status !== "concluida" ? " selected" : "") + ">Em andamento</option>" +
+      '<option value="concluida"' + (obra.status === "concluida" ? " selected" : "") + ">Concluída</option>" +
+      "</select></div>" +
+      "</div>" +
+      '<div class="form-actions">' +
+      '<button class="btn-primary" id="btnSalvarObra" type="button">Salvar alterações</button>' +
+      '<button class="btn-ghost btn-danger" id="btnExcluirObra" type="button">Excluir obra</button>' +
+      '<span class="save-note">Modificado em ' + fmtDateTime(obra.modificadoEm) + "</span>" +
+      "</div>";
+  }
+
+  function renderServicosTab(obra) {
+    var ativos = Store.funcionarios.filter(function (f) { return f.status !== "inativo"; });
+    var options = ativos.length
+      ? ativos.map(function (f) { return '<option value="' + f.id + '">' + esc(f.nome) + "</option>"; }).join("")
+      : '<option value="">Nenhum funcionário cadastrado</option>';
+
+    var form = '<div class="servico-form">' +
+      "<h3>Registrar serviço executado</h3>" +
+      '<div class="field-grid">' +
+      '<div class="field full"><label>O que foi executado</label><textarea id="svDescricao" placeholder="ex.: Reboco da parede externa, lado direito"></textarea></div>' +
+      '<div class="field"><label>Quem executou</label><select id="svFuncionario">' + options + "</select></div>" +
+      '<div class="field"><label>Dia</label><input type="date" id="svData" value="' + nowIso() + '"></div>' +
+      '<div class="field"><label>Hora</label><input type="time" id="svHora" value="' + new Date().toTimeString().slice(0, 5) + '"></div>' +
+      "</div>" +
+      '<div class="form-actions"><button class="btn-primary" id="btnAddServico" type="button">Adicionar serviço</button></div>' +
+      "</div>";
+
+    var list = Store.servicos.filter(function (s) { return s.obraId === obra.id; })
+      .sort(function (a, b) { return (b.data + "T" + (b.hora || "00:00")).localeCompare(a.data + "T" + (a.hora || "00:00")); });
+
+    var items = "";
+    if (list.length === 0) {
+      items = '<div class="empty-state">Nenhum serviço registrado ainda para esta obra.</div>';
+    } else {
+      items = '<ul class="servico-list">' + list.map(function (s) {
+        return '<li class="servico-item">' +
+          '<div class="servico-when">' + fmtDate(s.data) + "<br>" + esc(s.hora || "") + "</div>" +
+          '<div><div class="servico-desc">' + esc(s.descricao || "") + "</div>" +
+          '<div class="servico-who">' + esc(s.funcionarioNome || funcNome(s.funcionarioId)) + "</div></div>" +
+          '<button class="btn-icon" data-del-servico="' + s.id + '" title="Remover">remover</button>' +
+          "</li>";
+      }).join("") + "</ul>";
+    }
+    return form + items;
+  }
+
+  function renderFuncionariosView() {
+    var form = '<div class="servico-form">' +
+      "<h3>Adicionar funcionário</h3>" +
+      '<div class="field-grid">' +
+      '<div class="field"><label>Nome</label><input type="text" id="funcNomeInput" placeholder="ex.: José Ferreira"></div>' +
+      '<div class="field"><label>Função (opcional)</label><input type="text" id="funcFuncaoInput" placeholder="ex.: Pedreiro, eletricista..."></div>' +
+      "</div>" +
+      '<div class="form-actions"><button class="btn-primary" id="btnAddFuncionario" type="button">Adicionar</button></div>' +
+      "</div>";
+
+    var list = Store.funcionarios.slice().sort(function (a, b) { return (a.nome || "").localeCompare(b.nome || ""); });
+    var items = list.length === 0
+      ? '<div class="empty-state">Nenhum funcionário cadastrado ainda.</div>'
+      : '<ul class="func-list">' + list.map(function (f) {
+          var inativo = f.status === "inativo";
+          return '<li class="func-item' + (inativo ? " inativo" : "") + '">' +
+            "<div><div class=\"func-name\">" + esc(f.nome) + "</div>" +
+            '<div class="func-role">' + esc(f.funcao || "Função não informada") + (inativo ? " · inativo" : "") + "</div></div>" +
+            '<div class="func-actions">' +
+            '<button class="btn-ghost" data-toggle-func="' + f.id + '">' + (inativo ? "Reativar" : "Desativar") + "</button>" +
+            '<button class="btn-icon" data-del-func="' + f.id + '" title="Remover">remover</button>' +
+            "</div></li>";
+        }).join("") + "</ul>";
+    return form + items;
+  }
+
+  // ---------- bindings ----------
+  function bindObraDetail(obra) {
+    var tab = document.querySelector(".tabs");
+    if (tab) tab.querySelectorAll(".tab-btn").forEach(function (b) {
+      b.addEventListener("click", function () { ui.tab = b.dataset.tab; renderStage(); });
+    });
+    var save = document.getElementById("btnSalvarObra");
+    if (save) save.addEventListener("click", function () {
+      Store.updateObra(obra.id, {
+        nome: document.getElementById("fNome").value.trim() || "Obra sem nome",
+        cliente: document.getElementById("fCliente").value.trim(),
+        local: document.getElementById("fLocal").value.trim(),
+        dataInicio: document.getElementById("fInicio").value,
+        previsaoTermino: document.getElementById("fTermino").value,
+        status: document.getElementById("fStatus").value,
+        modificadoEm: Date.now()
+      });
+    });
+    var del = document.getElementById("btnExcluirObra");
+    if (del) del.addEventListener("click", function () {
+      if (confirm("Excluir esta obra e todos os serviços registrados nela?")) {
+        Store.deleteObra(obra.id);
+        ui.currentObraId = null;
+      }
+    });
+    var addSv = document.getElementById("btnAddServico");
+    if (addSv) addSv.addEventListener("click", function () {
+      var desc = document.getElementById("svDescricao").value.trim();
+      var funcId = document.getElementById("svFuncionario").value;
+      var data = document.getElementById("svData").value;
+      var hora = document.getElementById("svHora").value;
+      if (!desc) { document.getElementById("svDescricao").focus(); return; }
+      Store.addServico({
+        obraId: obra.id,
+        descricao: desc,
+        funcionarioId: funcId || null,
+        funcionarioNome: funcId ? funcNome(funcId) : "Não informado",
+        data: data || nowIso(),
+        hora: hora || ""
+      });
+      Store.updateObra(obra.id, { modificadoEm: Date.now() });
+    });
+    document.querySelectorAll("[data-del-servico]").forEach(function (b) {
+      b.addEventListener("click", function () { Store.deleteServico(b.dataset.delServico); });
+    });
+  }
+
+  function bindFuncionariosView() {
+    var add = document.getElementById("btnAddFuncionario");
+    if (add) add.addEventListener("click", function () {
+      var nome = document.getElementById("funcNomeInput").value.trim();
+      var funcao = document.getElementById("funcFuncaoInput").value.trim();
+      if (!nome) { document.getElementById("funcNomeInput").focus(); return; }
+      Store.addFuncionario({ nome: nome, funcao: funcao, status: "ativo" });
+    });
+    document.querySelectorAll("[data-toggle-func]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var f = Store.funcionarios.find(function (x) { return x.id === b.dataset.toggleFunc; });
+        if (f) Store.updateFuncionario(f.id, { status: f.status === "inativo" ? "ativo" : "inativo" });
+      });
+    });
+    document.querySelectorAll("[data-del-func]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (confirm("Remover este funcionário do cadastro?")) Store.deleteFuncionario(b.dataset.delFunc);
+      });
+    });
+  }
+
+  // ---------- search column ----------
+  function renderSearch() {
+    var sel = document.getElementById("qFuncionario");
+    var current = sel.value;
+    sel.innerHTML = '<option value="">Todos</option>' + Store.funcionarios
+      .slice().sort(function (a, b) { return (a.nome || "").localeCompare(b.nome || ""); })
+      .map(function (f) { return '<option value="' + f.id + '">' + esc(f.nome) + "</option>"; }).join("");
+    sel.value = current;
+
+    var q = ui.q.trim().toLowerCase();
+    var results = Store.obras.filter(function (o) {
+      if (q) {
+        var hay = ((o.nome || "") + " " + (o.cliente || "") + " " + (o.local || "")).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      if (ui.qFuncionario) {
+        var hasFunc = Store.servicos.some(function (s) { return s.obraId === o.id && s.funcionarioId === ui.qFuncionario; });
+        if (!hasFunc) return false;
+      }
+      return true;
+    });
+
+    results.sort(function (a, b) {
+      if (ui.qOrdenar === "nome") return (a.nome || "").localeCompare(b.nome || "");
+      if (ui.qOrdenar === "termino") return (a.previsaoTermino || "9999").localeCompare(b.previsaoTermino || "9999");
+      return (b.modificadoEm || 0) - (a.modificadoEm || 0);
+    });
+
+    document.getElementById("resultsCount").textContent = results.length + " obra(s) encontrada(s)";
+    document.getElementById("resultsList").innerHTML = results.map(function (o) {
+      var stampClass = o.status === "concluida" ? "stamp-concluida" : "stamp-andamento";
+      var stampLabel = o.status === "concluida" ? "Concluída" : "Em andamento";
+      return '<button class="result-item" data-obra="' + o.id + '">' +
+        '<div class="result-name">' + esc(o.nome || "Obra sem nome") + "</div>" +
+        '<div class="result-meta">' + esc(o.cliente || "—") + ' · mod. ' + fmtDate(new Date(o.modificadoEm || 0).toISOString().slice(0, 10)) +
+        '<span class="stamp ' + stampClass + '">' + stampLabel + "</span></div>" +
+        "</button>";
+    }).join("") || '<div class="empty-state">Nenhuma obra corresponde aos filtros.</div>';
+  }
+
+  // ---------- master render ----------
+  function render() {
+    renderRail();
+    renderStage();
+    renderSearch();
+  }
+
+  // ---------- global events (delegated, bound once) ----------
+  document.getElementById("navObras").addEventListener("click", function () { ui.nav = "obras"; render(); });
+  document.getElementById("navFuncionarios").addEventListener("click", function () { ui.nav = "funcionarios"; ui.currentObraId = null; render(); });
+
+  document.getElementById("statusFilterSection").addEventListener("click", function (e) {
+    var chip = e.target.closest(".chip");
+    if (!chip) return;
+    ui.statusFilter = chip.dataset.status;
+    renderRail();
+  });
+
+  document.getElementById("railList").addEventListener("click", function (e) {
+    var card = e.target.closest("[data-obra]");
+    if (!card) return;
+    ui.currentObraId = card.dataset.obra;
+    ui.tab = "info";
+    render();
+  });
+
+  document.getElementById("resultsList").addEventListener("click", function (e) {
+    var item = e.target.closest("[data-obra]");
+    if (!item) return;
+    ui.nav = "obras";
+    ui.currentObraId = item.dataset.obra;
+    ui.tab = "info";
+    render();
+    document.getElementById("searchCol").classList.remove("open");
+  });
+
+  document.getElementById("btnNovaObra").addEventListener("click", function () {
+    if (ui.nav === "funcionarios") { ui.nav = "funcionarios"; document.getElementById("funcNomeInput") && document.getElementById("funcNomeInput").focus(); return; }
+    Store.addObra({
+      nome: "Nova obra",
+      cliente: "",
+      local: "",
+      dataInicio: nowIso(),
+      previsaoTermino: "",
+      status: "andamento",
+      modificadoEm: Date.now()
+    }).then(function () {
+      // select the most recently created obra
+      var latest = Store.obras.slice().sort(function (a, b) { return (b.modificadoEm || 0) - (a.modificadoEm || 0); })[0];
+      if (latest) { ui.currentObraId = latest.id; ui.tab = "info"; }
+      render();
+    });
+  });
+
+  document.getElementById("qNome").addEventListener("input", function (e) { ui.q = e.target.value; renderSearch(); });
+  document.getElementById("qFuncionario").addEventListener("change", function (e) { ui.qFuncionario = e.target.value; renderSearch(); });
+  document.getElementById("qOrdenar").addEventListener("change", function (e) { ui.qOrdenar = e.target.value; renderSearch(); });
+
+  document.getElementById("btnDrawer").addEventListener("click", function () {
+    document.getElementById("searchCol").classList.toggle("open");
+  });
+
+  // ---------- boot ----------
+  Store.init(render);
+})();
+</script>
+</body>
+</html>
